@@ -119,15 +119,22 @@ function App() {
   }
 
   return (
-    <div className="app-shell">
-      <header className="app-header">
-        <div className="app-title">
-          IdeaBox
+  <div className="app-shell">
+    <header className="app-header">
+      <div className="app-title-wrap">
+        <div className="app-logo">
+          <span className="app-logo-mark">IB</span>
         </div>
-        <p className="app-subtitle">
-          Simple playground for ideas
-        </p>
-      </header>
+        <div>
+          <div className="app-title">
+            IdeaBox
+          </div>
+          <p className="app-subtitle">
+            Simple playground for ideas
+          </p>
+        </div>
+      </div>
+    </header>
 
       {!isAuthenticated ? (
         <main className="app-grid">
