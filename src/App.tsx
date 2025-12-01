@@ -123,11 +123,9 @@ function App() {
       <header className="app-header">
         <div className="app-title">
           IdeaBox
-          <span className="app-title-badge">alpha</span>
         </div>
         <p className="app-subtitle">
-          Simple playground for ideas – JWT auth, pagination and voting on top
-          of a .NET backend.
+          Simple playground for ideas
         </p>
       </header>
 
@@ -204,24 +202,13 @@ function App() {
             </div>
             <ul className="ideas-list">
               <li className="idea-item">
-                <div className="idea-title">1. Register or login</div>
-                <p className="idea-body">
-                  We call the IdeaBox API you already built in .NET and get a
-                  real JWT token back.
-                </p>
+                <div className="idea-title">1. Register or login</div>            
               </li>
               <li className="idea-item">
-                <div className="idea-title">2. Create ideas</div>
-                <p className="idea-body">
-                  Ideas are stored in your SQLite database via EF Core.
-                </p>
+                <div className="idea-title">2. Create ideas</div>           
               </li>
               <li className="idea-item">
-                <div className="idea-title">3. Vote & paginate</div>
-                <p className="idea-body">
-                  Like/unlike uses your voting table, and listing uses the
-                  paged endpoint.
-                </p>
+                <div className="idea-title">3. Vote & paginate</div>          
               </li>
             </ul>
           </section>
@@ -281,10 +268,7 @@ function App() {
           <section className="card" style={{ marginTop: "1rem" }}>
             <div className="ideas-header">
               <div>
-                <h2 className="card-title">Ideas</h2>
-                <div className="card-muted">
-                  Paginated list backed by your .NET API.
-                </div>
+                <h2 className="card-title">Ideas</h2>            
               </div>
               {loading && <div className="banner">Refreshing…</div>}
             </div>
