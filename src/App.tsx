@@ -26,6 +26,9 @@ function App() {
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
 
+  const [sortBy, setSortBy] = useState<"newest" | "top">("newest");
+  const [search, setSearch] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -118,23 +121,48 @@ function App() {
     setIdeas([]);
   }
 
+  // frontend search + sort (sadece mevcut sayfadaki kayıtlar üzerinde)
+  const processedIdeas = ideas
+    .filter((idea) => {
+      if (!search.trim()) return true;
+      const term = search.toLowerCase();
+      return (
+        idea.title.toLowerCase().includes(term) ||
+        idea.description.toLowerCase().includes(term)
+      );
+    })
+    .sort((a, b) => {
+      if (sortBy === "top") {
+        if (b.voteCount !== a.voteCount) {
+          return b.voteCount - a.voteCount;
+        }
+        return (
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+      }
+      // newest
+      return (
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+    });
+
   return (
-  <div className="app-shell">
-    <header className="app-header">
-      <div className="app-title-wrap">
-        <div className="app-logo">
-          <span className="app-logo-mark">IB</span>
-        </div>
-        <div>
-          <div className="app-title">
-            IdeaBox
+    <div className="app-shell">
+      <header className="app-header">
+        <div className="app-title-wrap">
+          <div className="app-logo">
+            <span className="app-logo-mark">IB</span>
           </div>
-          <p className="app-subtitle">
-            Simple playground for ideas
-          </p>
+          <div>
+            <div className="app-title">
+              IdeaBox
+            </div>
+            <p className="app-subtitle">
+              Simple playground for ideas
+            </p>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
 
       {!isAuthenticated ? (
         <main className="app-grid">
@@ -209,13 +237,24 @@ function App() {
             </div>
             <ul className="ideas-list">
               <li className="idea-item">
-                <div className="idea-title">1. Register or login</div>            
+                <div className="idea-title">1. Register or login</div>
+                <p className="idea-body">
+                  We call the IdeaBox API you already built in .NET and get a
+                  real JWT token back.
+                </p>
               </li>
               <li className="idea-item">
-                <div className="idea-title">2. Create ideas</div>           
+                <div className="idea-title">2. Create ideas</div>
+                <p className="idea-body">
+                  Ideas are stored in your SQLite database via EF Core.
+                </p>
               </li>
               <li className="idea-item">
-                <div className="idea-title">3. Vote & paginate</div>          
+                <div className="idea-title">3. Vote & paginate</div>
+                <p className="idea-body">
+                  Like/unlike uses your voting table, and listing uses the
+                  paged endpoint.
+                </p>
               </li>
             </ul>
           </section>
@@ -275,17 +314,58 @@ function App() {
           <section className="card" style={{ marginTop: "1rem" }}>
             <div className="ideas-header">
               <div>
-                <h2 className="card-title">Ideas</h2>            
+                <h2 className="card-title">Ideas</h2>
+                <div className="card-muted">
+                  Paginated list backed by your .NET API.
+                </div>
               </div>
-              {loading && <div className="banner">Refreshing…</div>}
+
+              <div className="ideas-toolbar">
+                <input
+                  type="text"
+                  className="input search-input"
+                  placeholder="Search title or description..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <div className="btn-row">
+                  <button
+                    type="button"
+                    className={
+                      "btn btn-sm btn-pill " +
+                      (sortBy === "newest" ? "btn-primary" : "btn-outline")
+                    }
+                    onClick={() => setSortBy("newest")}
+                  >
+                    Newest
+                  </button>
+                  <button
+                    type="button"
+                    className={
+                      "btn btn-sm btn-pill " +
+                      (sortBy === "top" ? "btn-primary" : "btn-outline")
+                    }
+                    onClick={() => setSortBy("top")}
+                  >
+                    Top voted
+                  </button>
+                </div>
+              </div>
             </div>
 
-            {ideas.length === 0 && !loading && (
-              <p className="card-muted">No ideas yet. Create your first one.</p>
+            {processedIdeas.length === 0 && !loading && (
+              <p className="card-muted">
+                No ideas match your filters. Try clearing search or creating a
+                new one.
+              </p>
+            )}
+
+            {loading && ideas.length === 0 && (
+              <p className="card-muted">Loading ideas…</p>
             )}
 
             <ul className="ideas-list">
-              {ideas.map((idea) => (
+              {processedIdeas.map((idea) => (
                 <li key={idea.id} className="idea-item">
                   <div className="idea-header">
                     <div>
