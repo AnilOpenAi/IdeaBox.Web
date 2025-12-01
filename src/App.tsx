@@ -119,291 +119,238 @@ function App() {
   }
 
   return (
-    <div
-      style={{
-        maxWidth: 900,
-        margin: "0 auto",
-        padding: "2rem",
-        fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
-      }}
-    >
-      <h1>IdeaBox</h1>
-      <p style={{ color: "#555" }}>
-        Simple frontend for the IdeaBox backend (login, list, like/unlike).
-      </p>
+    <div className="app-shell">
+      <header className="app-header">
+        <div className="app-title">
+          IdeaBox
+          <span className="app-title-badge">alpha</span>
+        </div>
+        <p className="app-subtitle">
+          Simple playground for ideas – JWT auth, pagination and voting on top
+          of a .NET backend.
+        </p>
+      </header>
 
       {!isAuthenticated ? (
-        <section
-          style={{
-            marginTop: "2rem",
-            border: "1px solid #ddd",
-            borderRadius: 8,
-            padding: "1.5rem",
-          }}
-        >
-          <h2>{authMode === "login" ? "Login" : "Register"}</h2>
+        <main className="app-grid">
+          <section className="card">
+            <div className="card-header">
+              <h2 className="card-title">
+                {authMode === "login" ? "Login" : "Create an account"}
+              </h2>
+            </div>
 
-          <div style={{ marginBottom: "1rem" }}>
-            <button
-              type="button"
-              onClick={() => setAuthMode("register")}
-              style={{
-                marginRight: "0.5rem",
-                padding: "0.25rem 0.75rem",
-                borderRadius: 6,
-                border:
-                  authMode === "register" ? "2px solid #007acc" : "1px solid #ccc",
-                background:
-                  authMode === "register" ? "#e6f2ff" : "transparent",
-              }}
-            >
-              Register
-            </button>
-            <button
-              type="button"
-              onClick={() => setAuthMode("login")}
-              style={{
-                padding: "0.25rem 0.75rem",
-                borderRadius: 6,
-                border:
-                  authMode === "login" ? "2px solid #007acc" : "1px solid #ccc",
-                background: authMode === "login" ? "#e6f2ff" : "transparent",
-              }}
-            >
-              Login
-            </button>
-          </div>
+            <div className="btn-row" style={{ marginBottom: "0.75rem" }}>
+              <button
+                type="button"
+                className={
+                  "btn btn-pill btn-sm " +
+                  (authMode === "register" ? "btn-primary" : "btn-outline")
+                }
+                onClick={() => setAuthMode("register")}
+              >
+                Register
+              </button>
+              <button
+                type="button"
+                className={
+                  "btn btn-pill btn-sm " +
+                  (authMode === "login" ? "btn-primary" : "btn-outline")
+                }
+                onClick={() => setAuthMode("login")}
+              >
+                Login
+              </button>
+            </div>
 
-          <form onSubmit={handleAuthSubmit}>
-            <div style={{ marginBottom: "0.75rem" }}>
-              <label>
-                Email
+            <form onSubmit={handleAuthSubmit}>
+              <div className="form-group">
+                <label className="label">Email</label>
                 <input
                   type="email"
+                  className="input"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  style={{ display: "block", width: "100%", padding: "0.5rem" }}
                 />
-              </label>
-            </div>
+              </div>
 
-            <div style={{ marginBottom: "0.75rem" }}>
-              <label>
-                Password
+              <div className="form-group">
+                <label className="label">Password</label>
                 <input
                   type="password"
+                  className="input"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  style={{ display: "block", width: "100%", padding: "0.5rem" }}
                 />
-              </label>
-            </div>
-
-            {error && (
-              <div style={{ color: "red", marginBottom: "0.75rem" }}>
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              disabled={loading}
-              style={{
-                padding: "0.5rem 1.25rem",
-                borderRadius: 6,
-                border: "none",
-                background: "#007acc",
-                color: "white",
-                cursor: "pointer",
-              }}
-            >
-              {loading ? "Please wait..." : "Submit"}
-            </button>
-          </form>
-        </section>
-      ) : (
-        <>
-          <section
-            style={{
-              marginTop: "1rem",
-              marginBottom: "1.5rem",
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <div>Logged in as: {email}</div>
-            <button
-              type="button"
-              onClick={handleLogout}
-              style={{
-                padding: "0.25rem 0.75rem",
-                borderRadius: 6,
-                border: "1px solid #ccc",
-                background: "white",
-                cursor: "pointer",
-              }}
-            >
-              Logout
-            </button>
-          </section>
-
-          <section
-            style={{
-              border: "1px solid #ddd",
-              borderRadius: 8,
-              padding: "1.5rem",
-              marginBottom: "1.5rem",
-            }}
-          >
-            <h2>Create new idea</h2>
-            <form onSubmit={handleCreateIdea}>
-              <div style={{ marginBottom: "0.75rem" }}>
-                <label>
-                  Title
-                  <input
-                    type="text"
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    style={{ display: "block", width: "100%", padding: "0.5rem" }}
-                  />
-                </label>
               </div>
 
-              <div style={{ marginBottom: "0.75rem" }}>
-                <label>
-                  Description
-                  <textarea
-                    value={newDescription}
-                    onChange={(e) => setNewDescription(e.target.value)}
-                    style={{ display: "block", width: "100%", padding: "0.5rem" }}
-                    rows={3}
-                  />
-                </label>
+              {error && <div className="error">{error}</div>}
+
+              <div style={{ marginTop: "0.75rem" }}>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? "Please wait..." : "Continue"}
+                </button>
               </div>
-
-              {error && (
-                <div style={{ color: "red", marginBottom: "0.75rem" }}>
-                  {error}
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={loading}
-                style={{
-                  padding: "0.5rem 1.25rem",
-                  borderRadius: 6,
-                  border: "none",
-                  background: "#28a745",
-                  color: "white",
-                  cursor: "pointer",
-                }}
-              >
-                Create
-              </button>
             </form>
           </section>
 
-          <section
-            style={{
-              border: "1px solid #ddd",
-              borderRadius: 8,
-              padding: "1.5rem",
-            }}
-          >
-            <h2>Ideas</h2>
+          <section className="card">
+            <div className="card-header">
+              <h2 className="card-title">How it works</h2>
+            </div>
+            <ul className="ideas-list">
+              <li className="idea-item">
+                <div className="idea-title">1. Register or login</div>
+                <p className="idea-body">
+                  We call the IdeaBox API you already built in .NET and get a
+                  real JWT token back.
+                </p>
+              </li>
+              <li className="idea-item">
+                <div className="idea-title">2. Create ideas</div>
+                <p className="idea-body">
+                  Ideas are stored in your SQLite database via EF Core.
+                </p>
+              </li>
+              <li className="idea-item">
+                <div className="idea-title">3. Vote & paginate</div>
+                <p className="idea-body">
+                  Like/unlike uses your voting table, and listing uses the
+                  paged endpoint.
+                </p>
+              </li>
+            </ul>
+          </section>
+        </main>
+      ) : (
+        <>
+          <section className="card">
+            <div className="card-header">
+              <div>
+                <div className="card-title">Welcome back</div>
+                <div className="card-muted">Signed in as {email}</div>
+              </div>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </div>
 
-            {loading && ideas.length === 0 && <p>Loading ideas...</p>}
+            <form onSubmit={handleCreateIdea}>
+              <div className="form-group">
+                <label className="label">Title</label>
+                <input
+                  type="text"
+                  className="input"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                />
+              </div>
 
-            {ideas.length === 0 && !loading && <p>No ideas yet.</p>}
+              <div className="form-group">
+                <label className="label">Description</label>
+                <textarea
+                  className="textarea"
+                  rows={3}
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                />
+              </div>
 
-            <ul style={{ listStyle: "none", padding: 0 }}>
-              {ideas.map((idea) => (
-                <li
-                  key={idea.id}
-                  style={{
-                    borderBottom: "1px solid #eee",
-                    padding: "0.75rem 0",
-                  }}
+              {error && <div className="error">{error}</div>}
+
+              <div style={{ marginTop: "0.75rem" }}>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
                 >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
+                  Create idea
+                </button>
+              </div>
+            </form>
+          </section>
+
+          <section className="card" style={{ marginTop: "1rem" }}>
+            <div className="ideas-header">
+              <div>
+                <h2 className="card-title">Ideas</h2>
+                <div className="card-muted">
+                  Paginated list backed by your .NET API.
+                </div>
+              </div>
+              {loading && <div className="banner">Refreshing…</div>}
+            </div>
+
+            {ideas.length === 0 && !loading && (
+              <p className="card-muted">No ideas yet. Create your first one.</p>
+            )}
+
+            <ul className="ideas-list">
+              {ideas.map((idea) => (
+                <li key={idea.id} className="idea-item">
+                  <div className="idea-header">
                     <div>
-                      <strong>{idea.title}</strong>
-                      <div style={{ fontSize: 12, color: "#666" }}>
+                      <div className="idea-title">{idea.title}</div>
+                      <div className="idea-meta">
                         {new Date(idea.createdAt).toLocaleString()}
                       </div>
                     </div>
-                    <div>
-                      <span style={{ marginRight: "0.75rem" }}>
-                        👍 {idea.voteCount}
-                      </span>
+                    <div className="btn-row">
+                      <span className="card-muted">👍 {idea.voteCount}</span>
                       <button
                         type="button"
+                        className="btn btn-outline btn-sm"
                         onClick={() => handleLike(idea.id)}
-                        style={{
-                          marginRight: "0.25rem",
-                          padding: "0.25rem 0.5rem",
-                          borderRadius: 6,
-                          border: "1px solid #ccc",
-                          background: "white",
-                          cursor: "pointer",
-                        }}
                       >
                         Like
                       </button>
                       <button
                         type="button"
+                        className="btn btn-outline btn-sm"
                         onClick={() => handleUnlike(idea.id)}
-                        style={{
-                          padding: "0.25rem 0.5rem",
-                          borderRadius: 6,
-                          border: "1px solid #ccc",
-                          background: "white",
-                          cursor: "pointer",
-                        }}
                       >
                         Unlike
                       </button>
                     </div>
                   </div>
-                  <p style={{ marginTop: "0.5rem" }}>{idea.description}</p>
+                  <p className="idea-body">{idea.description}</p>
                 </li>
               ))}
             </ul>
 
-            <div
-              style={{
-                marginTop: "1rem",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <button
-                type="button"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page <= 1}
-              >
-                ◀ Prev
-              </button>
-              <span>
-                Page {page} / {totalPages}
-              </span>
-              <button
-                type="button"
-                onClick={() => setPage((p) => (p < totalPages ? p + 1 : p))}
-                disabled={page >= totalPages}
-              >
-                Next ▶
-              </button>
-            </div>
+            {ideas.length > 0 && (
+              <div className="pagination">
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page <= 1}
+                >
+                  ◀ Prev
+                </button>
+                <span>
+                  Page {page} / {totalPages || 1}
+                </span>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-outline"
+                  onClick={() =>
+                    setPage((p) => (p < totalPages ? p + 1 : p))
+                  }
+                  disabled={page >= totalPages}
+                >
+                  Next ▶
+                </button>
+              </div>
+            )}
           </section>
         </>
       )}
